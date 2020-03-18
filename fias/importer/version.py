@@ -96,11 +96,13 @@ def fetch_version_info(update_all=False):
             raise ImproperlyConfigured('Не найдено подходящей библиотеки для работы с WSDL.'
                                        ' Пожалуйста установите zeep или suds!')
 
-    
-    pre_fetch_version.send(object.__class__)
+    try:
+        pre_fetch_version.send(object.__class__)
 
-    result = client.service.GetAllDownloadFileInfo()
-    for item in iter_version_info(result=result):
-        parse_func(item=item, update_all=update_all)
+        result = client.service.GetAllDownloadFileInfo()
+        for item in iter_version_info(result=result):
+            parse_func(item=item, update_all=update_all)
 
-    post_fetch_version.send(object.__class__)
+        post_fetch_version.send(object.__class__)
+    except:
+        pass
